@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>현대건축명장의 명작 랜덤생성기</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+  }
+  #imageContainer {
+    margin-top: 20px;
+  }
+  #displayedImage {
+    max-width: 80%;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+  }
+  #imageName {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  /* 상세 이미지 여러개 스타일 */
+  .detail-images {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .detail-images img {
+    width: 60%;
+    max-width: 30%;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: block; /* 처음에는 숨김 */
+  }
+</style>
+</head>
+<body>
+
+<h1>현대건축명장의 명작 랜덤생성기</h1>
+<button id="showRandomBtn">랜덤 이미지 보기</button>
+<div id="imageContainer">
+  <img id="displayedImage" src="" alt="랜덤 이미지" />
+  <div id="imageName"></div>
+  <br>
+  <hr>
+  <button style="background-color:blanchedalmond;" id="sangsae">상세히 보기</button>
+</div>
+
+<!-- 상세 이미지 여러개 보여줄 영역 -->
+<div class="detail-images" id="detailImagesContainer">
+  <img id="detailImage1" src="" alt="상세 이미지 1" />
+  <img id="detailImage2" src="" alt="상세 이미지 2" />
+  <img id="detailImage3" src="" alt="상세 이미지 3" />
+</div>
+
+<script>
+  let currentImageName = '';
+
+  const fileNames1 = [
+    '겐조단게1.png', '겐조단게2.png', '겐조단게3.png', '겐조단게4.png',
+    '노먼포스터1.png', '노먼포스터2.png', '노먼포스터3.png', '노먼포스터4.png', '노먼포스터5.png',
+    '렌조피아노1.png', '렌조피아노2.png', '렌조피아노3.png', '렌조피아노4.png',
+    '렘쿨하스1.png', '렘쿨하스2.png', '렘쿨하스3.png', '렘쿨하스4.png', '렘쿨하스5.png', '렘쿨하스6.png', '렘쿨하스7.png',
+    '로버트벤츄리1.png', '로버트벤츄리2.png', '로버트벤츄리3.png', '로버트벤츄리4.png',
+    '리차드로저스1.png', '리차드로저스2.png', '리차드로저스3.png', '리차드로저스4.png',
+    '리차드마이어1.png', '리차드마이어2.png', '리차드마이어3.png', '리차드마이어4.png', '리차드마이어5.png', '리차드마이어6.png',
+    '세지마&니시자와1.png', '세지마&니시자와2.png', '세지마&니시자와3.png', '세지마&니시자와4.png', '세지마&니시자와5.png',
+    '아이엠페이1.png', '아이엠페이2.png', '아이엠페이3.png', '아이엠페이4.png', '아이엠페이5.png',
+    '알레한드로아라베나1.png', '알레한드로아라베나2.png', '알레한드로아라베나3.png', '알레한드로아라베나4.png', '알레한드로아라베나5.png',
+    '알바로시자1.png', '알바로시자2.png', '알바로시자3.png', '알바로시자4.png',
+    '왕슈1.png', '왕슈2.png', '왕슈3.png', '왕슈4.png', '왕슈5.png',
+          ];
+  const fileNames2 = [
+    '자하하디드1.png', '자하하디드2.png', '자하하디드3.png', '자하하디드4.png', '자하하디드5.png', '자하하디드6.png',
+    '장누벨1.png', '장누벨2.png', '장누벨3.png', '장누벨4.png', '장누벨5.png', '장누벨6.png',
+    '크리스티앙드포잠박1.png', '크리스티앙드포잠박2.png', '크리스티앙드포잠박3.png', '크리스티앙드포잠박4.png',
+    '타다오안도1.png', '타다오안도2.png', '타다오안도3.png', '타다오안도4.png', '타다오안도5.png', '타다오안도6.png',
+    '토요이토1.png', '토요이토2.png', '토요이토3.png', '토요이토4.png', '토요이토5.png', '토요이토6.png', '토요이토7.png', '토요이토8.png',
+    '톰메인1.png', '톰메인2.png', '톰메인3.png', '톰메인4.png', '톰메인5.png',
+    '프랭크게리1.png', '프랭크게리2.png', '프랭크게리3.png', '프랭크게리4.png', '프랭크게리5.png',
+    '피터줌토르1.png', '피터줌토르2.png', '피터줌토르3.png', '피터줌토르4.png', '피터줌토르5.png',
+    '필립존슨1.png', '필립존슨2.png', '필립존슨3.png',
+    '헤이조그&드뫼롱1.png', '헤이조그&드뫼롱2.png', '헤이조그&드뫼롱3.png', '헤이조그&드뫼롱4.png', '헤이조그&드뫼롱5.png', '헤이조그&드뫼롱6.png', '헤이조그&드뫼롱7.png'
+  ];
+
+  // 상세 이미지 경로 매핑 (여기서 각 파일 이름에 맞는 상세 이미지 경로를 넣기)
+  const sangsaeImages = {
+    '겐조단게1.png': ['details/겐조단게1.png', 'details/겐조단게2.png', 'details/겐조단게3.png'],
+    '겐조단게2.png': ['details/겐조단게1.png', 'details/겐조단게2.png', 'details/겐조단게3.png'],
+    '겐조단게3.png': ['details/겐조단게1.png', 'details/겐조단게2.png', 'details/겐조단게3.png'],
+    '겐조단게4.png': ['details/겐조단게1.png', 'details/겐조단게2.png', 'details/겐조단게3.png'],
+    '노먼포스터1.png': ['details/노먼포스터1.png', 'details/노먼포스터2.png', 'details/노먼포스터3.png'],
+    '노먼포스터2.png': ['details/노먼포스터1.png', 'details/노먼포스터2.png', 'details/노먼포스터3.png'],
+    '노먼포스터3.png': ['details/노먼포스터1.png', 'details/노먼포스터2.png', 'details/노먼포스터3.png'],
+    '노먼포스터4.png': ['details/노먼포스터1.png', 'details/노먼포스터2.png', 'details/노먼포스터3.png'],
+    '노먼포스터5.png': ['details/노먼포스터1.png', 'details/노먼포스터2.png', 'details/노먼포스터3.png'],
+    '렌조피아노1.png': ['details/렌조피아노1.png', 'details/렌조피아노2.png', 'details/렌조피아노3.png'],
+    '렌조피아노2.png': ['details/렌조피아노1.png', 'details/렌조피아노2.png', 'details/렌조피아노3.png'],
+    '렌조피아노3.png': ['details/렌조피아노1.png', 'details/렌조피아노2.png', 'details/렌조피아노3.png'],
+    '렌조피아노4.png': ['details/렌조피아노1.png', 'details/렌조피아노2.png', 'details/렌조피아노3.png'],
+    '렘쿨하스1.png': ['details/렘쿨하스1.png', 'details/렘쿨하스2.png', 'details/렘쿨하스3.png'],
+    '렘쿨하스2.png': ['details/렘쿨하스1.png', 'details/렘쿨하스2.png', 'details/렘쿨하스3.png'],
+    '렘쿨하스3.png': ['details/렘쿨하스1.png', 'details/렘쿨하스2.png', 'details/렘쿨하스3.png'],
+    '렘쿨하스4.png': ['details/렘쿨하스1.png', 'details/렘쿨하스2.png', 'details/렘쿨하스3.png'],
+    '렘쿨하스5.png': ['details/렘쿨하스1.png', 'details/렘쿨하스2.png', 'details/렘쿨하스3.png'],
+    '렘쿨하스6.png': ['details/렘쿨하스1.png', 'details/렘쿨하스2.png', 'details/렘쿨하스3.png'],
+    '렘쿨하스7.png': ['details/렘쿨하스1.png', 'details/렘쿨하스2.png', 'details/렘쿨하스3.png'],
+    '로버트벤츄리1.png': ['details/로버트벤츄리1.png', 'details/로버트벤츄리2.png', 'details/로버트벤츄리3.png'],
+    '로버트벤츄리2.png': ['details/로버트벤츄리1.png', 'details/로버트벤츄리2.png', 'details/로버트벤츄리3.png'],
+    '로버트벤츄리3.png': ['details/로버트벤츄리1.png', 'details/로버트벤츄리2.png', 'details/로버트벤츄리3.png'],
+    '로버트벤츄리4.png': ['details/로버트벤츄리1.png', 'details/로버트벤츄리2.png', 'details/로버트벤츄리3.png'],
+    '리차드로저스1.png': ['details/리차드로저스1.png', 'details/리차드로저스2.png', 'details/리차드로저스3.png'],
+    '리차드로저스2.png': ['details/리차드로저스1.png', 'details/리차드로저스2.png', 'details/리차드로저스3.png'],
+    '리차드로저스3.png': ['details/리차드로저스1.png', 'details/리차드로저스2.png', 'details/리차드로저스3.png'],
+    '리차드로저스4.png': ['details/리차드로저스1.png', 'details/리차드로저스2.png', 'details/리차드로저스3.png'],
+    '리차드마이어1.png': ['details/리차드마이어1.png', 'details/리차드마이어2.png', 'details/리차드마이어3.png'],
+    '리차드마이어2.png': ['details/리차드마이어1.png', 'details/리차드마이어2.png', 'details/리차드마이어3.png'],
+    '리차드마이어3.png': ['details/리차드마이어1.png', 'details/리차드마이어2.png', 'details/리차드마이어3.png'],
+    '리차드마이어4.png': ['details/리차드마이어1.png', 'details/리차드마이어2.png', 'details/리차드마이어3.png'],
+    '리차드마이어5.png': ['details/리차드마이어1.png', 'details/리차드마이어2.png', 'details/리차드마이어3.png'],
+    '리차드마이어6.png': ['details/리차드마이어1.png', 'details/리차드마이어2.png', 'details/리차드마이어3.png'],
+    '세지마&니시자와1.png': ['details/세지마&니시자와1.png', 'details/세지마&니시자와2.png', 'details/세지마&니시자와3.png'],
+    '세지마&니시자와2.png': ['details/세지마&니시자와1.png', 'details/세지마&니시자와2.png', 'details/세지마&니시자와3.png'],
+    '세지마&니시자와3.png': ['details/세지마&니시자와1.png', 'details/세지마&니시자와2.png', 'details/세지마&니시자와3.png'],
+    '세지마&니시자와4.png': ['details/세지마&니시자와1.png', 'details/세지마&니시자와2.png', 'details/세지마&니시자와3.png'],
+    '세지마&니시자와5.png': ['details/세지마&니시자와1.png', 'details/세지마&니시자와2.png', 'details/세지마&니시자와3.png'],
+    '아이엠페이1.png': ['details/아이엠페이1.png', 'details/아이엠페이2.png', 'details/아이엠페이3.png'],
+    '아이엠페이2.png': ['details/아이엠페이1.png', 'details/아이엠페이2.png', 'details/아이엠페이3.png'],
+    '아이엠페이3.png': ['details/아이엠페이1.png', 'details/아이엠페이2.png', 'details/아이엠페이3.png'],
+    '아이엠페이4.png': ['details/아이엠페이1.png', 'details/아이엠페이2.png', 'details/아이엠페이3.png'],
+    '아이엠페이5.png': ['details/아이엠페이1.png', 'details/아이엠페이2.png', 'details/아이엠페이3.png'],
+    '알레한드로아라베나1.png': ['details/알레한드로아라베나1.png', 'details/알레한드로아라베나2.png', 'details/알레한드로아라베나3.png'],
+    '알레한드로아라베나2.png': ['details/알레한드로아라베나1.png', 'details/알레한드로아라베나2.png', 'details/알레한드로아라베나3.png'],
+    '알레한드로아라베나3.png': ['details/알레한드로아라베나1.png', 'details/알레한드로아라베나2.png', 'details/알레한드로아라베나3.png'],
+    '알레한드로아라베나4.png': ['details/알레한드로아라베나1.png', 'details/알레한드로아라베나2.png', 'details/알레한드로아라베나3.png'],
+    '알레한드로아라베나5.png': ['details/알레한드로아라베나1.png', 'details/알레한드로아라베나2.png', 'details/알레한드로아라베나3.png'],
+    '알바로시자1.png': ['details/알바로시자1.png', 'details/알바로시자2.png', 'details/알바로시자3.png'],
+    '알바로시자2.png': ['details/알바로시자1.png', 'details/알바로시자2.png', 'details/알바로시자3.png'],
+    '알바로시자3.png': ['details/알바로시자1.png', 'details/알바로시자2.png', 'details/알바로시자3.png'],
+    '알바로시자4.png': ['details/알바로시자1.png', 'details/알바로시자2.png', 'details/알바로시자3.png'],
+    '왕슈1.png': ['details/왕슈1.png', 'details/왕슈2.png', 'details/왕슈3.png'],
+    '왕슈2.png': ['details/왕슈1.png', 'details/왕슈2.png', 'details/왕슈3.png'],
+    '왕슈3.png': ['details/왕슈1.png', 'details/왕슈2.png', 'details/왕슈3.png'],
+    '왕슈4.png': ['details/왕슈1.png', 'details/왕슈2.png', 'details/왕슈3.png'],
+    '왕슈5.png': ['details/왕슈1.png', 'details/왕슈2.png', 'details/왕슈3.png'],
+    '자하하디드1.png': ['details/자하하디드1.png', 'details/자하하디드2.png', 'details/자하하디드3.png'],
+    '자하하디드2.png': ['details/자하하디드1.png', 'details/자하하디드2.png', 'details/자하하디드3.png'],
+    '자하하디드3.png': ['details/자하하디드1.png', 'details/자하하디드2.png', 'details/자하하디드3.png'],
+    '자하하디드4.png': ['details/자하하디드1.png', 'details/자하하디드2.png', 'details/자하하디드3.png'],
+    '자하하디드5.png': ['details/자하하디드1.png', 'details/자하하디드2.png', 'details/자하하디드3.png'],
+    '자하하디드6.png': ['details/자하하디드1.png', 'details/자하하디드2.png', 'details/자하하디드3.png'],
+    '장누벨1.png': ['details/장누벨1.png', 'details/장누벨2.png', 'details/장누벨3.png'],
+    '장누벨2.png': ['details/장누벨1.png', 'details/장누벨2.png', 'details/장누벨3.png'],
+    '장누벨3.png': ['details/장누벨1.png', 'details/장누벨2.png', 'details/장누벨3.png'],
+    '장누벨4.png': ['details/장누벨1.png', 'details/장누벨2.png', 'details/장누벨3.png'],
+    '장누벨5.png': ['details/장누벨1.png', 'details/장누벨2.png', 'details/장누벨3.png'],
+    '장누벨6.png': ['details/장누벨1.png', 'details/장누벨2.png', 'details/장누벨3.png'],
+    '크리스티앙드포잠박1.png': ['details/크리스티앙드포잠박1.png', 'details/크리스티앙드포잠박2.png', 'details/크리스티앙드포잠박3.png'],
+    '크리스티앙드포잠박2.png': ['details/크리스티앙드포잠박1.png', 'details/크리스티앙드포잠박2.png', 'details/크리스티앙드포잠박3.png'],
+    '크리스티앙드포잠박3.png': ['details/크리스티앙드포잠박1.png', 'details/크리스티앙드포잠박2.png', 'details/크리스티앙드포잠박3.png'],
+    '크리스티앙드포잠박4.png': ['details/크리스티앙드포잠박1.png', 'details/크리스티앙드포잠박2.png', 'details/크리스티앙드포잠박3.png'],
+    '타다오안도1.png': ['details/타다오안도1.png', 'details/타다오안도2.png', 'details/타다오안도3.png'],
+    '타다오안도2.png': ['details/타다오안도1.png', 'details/타다오안도2.png', 'details/타다오안도3.png'],
+    '타다오안도3.png': ['details/타다오안도1.png', 'details/타다오안도2.png', 'details/타다오안도3.png'],
+    '타다오안도4.png': ['details/타다오안도1.png', 'details/타다오안도2.png', 'details/타다오안도3.png'],
+    '타다오안도5.png': ['details/타다오안도1.png', 'details/타다오안도2.png', 'details/타다오안도3.png'],
+    '타다오안도6.png': ['details/타다오안도1.png', 'details/타다오안도2.png', 'details/타다오안도3.png'],
+    '토요이토1.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '토요이토2.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '토요이토3.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '토요이토4.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '토요이토5.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '토요이토6.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '토요이토7.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '토요이토8.png': ['details/토요이토1.png', 'details/토요이토2.png', 'details/토요이토3.png'],
+    '톰메인1.png': ['details/톰메인1.png', 'details/톰메인2.png', 'details/톰메인3.png'],
+    '톰메인2.png': ['details/톰메인1.png', 'details/톰메인2.png', 'details/톰메인3.png'],
+    '톰메인3.png': ['details/톰메인1.png', 'details/톰메인2.png', 'details/톰메인3.png'],
+    '톰메인4.png': ['details/톰메인1.png', 'details/톰메인2.png', 'details/톰메인3.png'],
+    '톰메인5.png': ['details/톰메인1.png', 'details/톰메인2.png', 'details/톰메인3.png'],
+    '프랭크게리1.png': ['details/프랭크게리1.png', 'details/프랭크게리2.png', 'details/프랭크게리3.png'],
+    '프랭크게리2.png': ['details/프랭크게리1.png', 'details/프랭크게리2.png', 'details/프랭크게리3.png'],
+    '프랭크게리3.png': ['details/프랭크게리1.png', 'details/프랭크게리2.png', 'details/프랭크게리3.png'],
+    '프랭크게리4.png': ['details/프랭크게리1.png', 'details/프랭크게리2.png', 'details/프랭크게리3.png'],
+    '프랭크게리5.png': ['details/프랭크게리1.png', 'details/프랭크게리2.png', 'details/프랭크게리3.png'],
+    '피터줌토르1.png': ['details/피터줌토르1.png', 'details/피터줌토르2.png', 'details/피터줌토르3.png'],
+    '피터줌토르2.png': ['details/피터줌토르1.png', 'details/피터줌토르2.png', 'details/피터줌토르3.png'],
+    '피터줌토르3.png': ['details/피터줌토르1.png', 'details/피터줌토르2.png', 'details/피터줌토르3.png'],
+    '피터줌토르4.png': ['details/피터줌토르1.png', 'details/피터줌토르2.png', 'details/피터줌토르3.png'],
+    '피터줌토르5.png': ['details/피터줌토르1.png', 'details/피터줌토르2.png', 'details/피터줌토르3.png'],
+    '헤이조그&드뫼롱1.png': ['details/헤이조그&드뫼롱1.png', 'details/헤이조그&드뫼롱2.png', 'details/헤이조그&드뫼롱3.png'],
+    '헤이조그&드뫼롱2.png': ['details/헤이조그&드뫼롱1.png', 'details/헤이조그&드뫼롱2.png', 'details/헤이조그&드뫼롱3.png'],
+    '헤이조그&드뫼롱3.png': ['details/헤이조그&드뫼롱1.png', 'details/헤이조그&드뫼롱2.png', 'details/헤이조그&드뫼롱3.png'],
+    '헤이조그&드뫼롱4.png': ['details/헤이조그&드뫼롱1.png', 'details/헤이조그&드뫼롱2.png', 'details/헤이조그&드뫼롱3.png'],
+    '헤이조그&드뫼롱5.png': ['details/헤이조그&드뫼롱1.png', 'details/헤이조그&드뫼롱2.png', 'details/헤이조그&드뫼롱3.png'],
+    '헤이조그&드뫼롱6.png': ['details/헤이조그&드뫼롱1.png', 'details/헤이조그&드뫼롱2.png', 'details/헤이조그&드뫼롱3.png'],
+    '헤이조그&드뫼롱7.png': ['details/헤이조그&드뫼롱1.png', 'details/헤이조그&드뫼롱2.png', 'details/헤이조그&드뫼롱3.png'],
+    '필립존슨1.png': ['details/필립존슨1.png', 'details/필립존슨2.png', 'details/필립존슨3.png'],
+    '필립존슨2.png': ['details/필립존슨1.png', 'details/필립존슨2.png', 'details/필립존슨3.png'],
+    '필립존슨3.png': ['details/필립존슨1.png', 'details/필립존슨2.png', 'details/필립존슨3.png']
+  };
+
+  const images = [
+  ...fileNames1.map(fileName => ({ src: 'buildings/' + fileName, name: fileName })),
+  ...fileNames2.map(fileName => ({ src: 'buildings2/' + fileName, name: fileName }))
+  ];
+  
+
+  const imgElement = document.getElementById('displayedImage');
+  const nameElement = document.getElementById('imageName');
+  const btnRandom = document.getElementById('showRandomBtn');
+  const btnSangsae = document.getElementById('sangsae');
+
+  const detailImgs = [
+    document.getElementById('detailImage1'),
+    document.getElementById('detailImage2'),
+    document.getElementById('detailImage3')
+  ];
+
+  // 랜덤 이미지 선택
+  btnRandom.addEventListener('click', () => {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    const selectedImage = images[randomIndex];
+    imgElement.src = selectedImage.src;
+    nameElement.textContent = selectedImage.name;
+    currentImageName = selectedImage.name;
+
+    // 상세 이미지 숨기기
+    document.getElementById('detailImagesContainer').style.display = 'none';
+    detailImgs.forEach(img => img.style.display = 'none');
+  });
+
+  // 상세히 보기 버튼 클릭
+  btnSangsae.addEventListener('click', () => {
+    const imagesArr = sangsaeImages[currentImageName];
+    if (imagesArr && imagesArr.length >= 3) {
+      for (let i=0; i<3; i++) {
+        detailImgs[i].src = imagesArr[i];
+        detailImgs[i].style.display = 'block';
+      }
+      document.getElementById('detailImagesContainer').style.display = 'flex';
+    } else {
+      alert('상세 이미지가 없습니다.');
+    }
+  });
+
+  // 페이지 로드 시 첫 이미지와 이름 보여주기
+  window.onload = () => {
+    if (images.length > 0) {
+      imgElement.src = images[0].src;
+      nameElement.textContent = images[0].name;
+      currentImageName = images[0].name;
+    }
+  };
+</script>
+
+</body>
+</html>
